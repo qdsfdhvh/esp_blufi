@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi.security;
+package blufi.espressif.security;
 
 public class BlufiCRC {
     private static final int[] CRC_TB = {

@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi.security;
+package blufi.espressif.security;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

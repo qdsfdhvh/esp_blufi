@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi;
+package blufi.espressif;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -31,15 +31,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.crypto.interfaces.DHPublicKey;
 
-import yu.legend.esp_blufi.params.BlufiConfigureParams;
-import yu.legend.esp_blufi.params.BlufiParameter;
-import yu.legend.esp_blufi.response.BlufiScanResult;
-import yu.legend.esp_blufi.response.BlufiStatusResponse;
-import yu.legend.esp_blufi.response.BlufiVersionResponse;
-import yu.legend.esp_blufi.security.BlufiAES;
-import yu.legend.esp_blufi.security.BlufiCRC;
-import yu.legend.esp_blufi.security.BlufiDH;
-import yu.legend.esp_blufi.security.BlufiMD5;
+import blufi.espressif.params.BlufiConfigureParams;
+import blufi.espressif.params.BlufiParameter;
+import blufi.espressif.response.BlufiScanResult;
+import blufi.espressif.response.BlufiStatusResponse;
+import blufi.espressif.response.BlufiVersionResponse;
+import blufi.espressif.security.BlufiAES;
+import blufi.espressif.security.BlufiCRC;
+import blufi.espressif.security.BlufiDH;
+import blufi.espressif.security.BlufiMD5;
 
 @SuppressLint("MissingPermission")
 class BlufiClientImpl implements BlufiParameter {
@@ -59,7 +59,7 @@ class BlufiClientImpl implements BlufiParameter {
     private static final String DH_G = "2";
     private static final String AES_TRANSFORMATION = "AES/CFB/NoPadding";
 
-    private boolean mPrintDebug = BuildConfig.DEBUG;
+    private boolean mPrintDebug = yu.legend.esp_blufi.BuildConfig.DEBUG;
 
     private BlufiClient mClient;
 
@@ -138,13 +138,10 @@ class BlufiClientImpl implements BlufiParameter {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mGatt = mDevice.connectGatt(mContext, false, mInnerGattCallback, BluetoothDevice.TRANSPORT_LE);
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mGatt = mDevice.connectGatt(mContext, false, mInnerGattCallback);
-            }
+            mGatt = mDevice.connectGatt(mContext, false, mInnerGattCallback);
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     synchronized void close() {
         mConnectState = BluetoothGatt.STATE_DISCONNECTED;
 
@@ -301,7 +298,6 @@ class BlufiClientImpl implements BlufiParameter {
         return mConnectState == BluetoothGatt.STATE_CONNECTED;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private boolean gattWrite(byte[] data) throws InterruptedException {
         if (!isConnected()) {
             return false;
@@ -657,6 +653,19 @@ class BlufiClientImpl implements BlufiParameter {
                 String softapSSID = new String(data);
                 response.setSoftAPSSID(softapSSID);
                 break;
+            case BlufiParameter.Type.Data.SUBTYPE_WIFI_STA_MAX_CONN_RETRY:
+                int maxRetry = toInt(data[0]);
+                response.setMaxRetry(maxRetry);
+                break;
+            case BlufiParameter.Type.Data.SUBTYPE_WIFI_STA_CONN_END_REASON:
+                int endReason = toInt(data[0]);
+                response.setEndReason(endReason);
+                break;
+            case BlufiParameter.Type.Data.SUBTYPE_WIFI_STA_CONN_RSSI:
+                int rssi = data[0];
+                response.setRssi(rssi);
+                break;
+
         }
     }
 
@@ -1154,7 +1163,6 @@ class BlufiClientImpl implements BlufiParameter {
         int type = getTypeValue(Type.Ctrl.PACKAGE_VALUE, Type.Ctrl.SUBTYPE_CLOSE_CONNECTION);
         try {
             post(false, false, false, type, null);
-            Log.w(TAG, "requestCloseConnection should be successful by now");
         } catch (InterruptedException e) {
             Log.w(TAG, "post requestCloseConnection interrupted");
             Thread.currentThread().interrupt();
@@ -1187,7 +1195,6 @@ class BlufiClientImpl implements BlufiParameter {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private class InnerGattCallback extends BluetoothGattCallback {
 
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {

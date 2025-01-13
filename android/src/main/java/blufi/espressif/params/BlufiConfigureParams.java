@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi.params;
+package blufi.espressif.params;
 
 import java.io.Serializable;
 import java.util.Locale;

@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi.params;
+package blufi.espressif.params;
 
 import java.util.UUID;
 
@@ -7,20 +7,6 @@ public interface BlufiParameter {
     UUID UUID_WRITE_CHARACTERISTIC = UUID.fromString("0000ff01-0000-1000-8000-00805f9b34fb");
     UUID UUID_NOTIFICATION_CHARACTERISTIC = UUID.fromString("0000ff02-0000-1000-8000-00805f9b34fb");
     UUID UUID_NOTIFICATION_DESCRIPTOR = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
-
-
-    String KEY_BLE_DEVICE = "key_ble_device";
-
-    String KEY_CONFIGURE_PARAM = "configure_param";
-
-    int MIN_MTU_LENGTH = 23;
-    int MAX_MTU_LENGTH = 517;
-    int DEFAULT_MTU_LENGTH = 512;
-
-    long GATT_WRITE_TIMEOUT = 5000L;
-//    long GATT_WRITE_TIMEOUT = 10000L;
-//    long GATT_WRITE_TIMEOUT = 40000L;
 
     int DIRECTION_OUTPUT = 0;
     int DIRECTION_INPUT = 1;
@@ -35,6 +21,16 @@ public interface BlufiParameter {
     int SOFTAP_SECURITY_WPA = 0x02;
     int SOFTAP_SECURITY_WPA2 = 0x03;
     int SOFTAP_SECURITY_WPA_WPA2 = 0x04;
+
+    int STA_CONN_SUCCESS = 0x00;
+    int STA_CONN_FAIL = 0x01;
+    int STA_CONN_CONNECTING = 0X02;
+    int STA_CONN_NO_IP = 0x03;
+
+    int WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT = 15;
+    int WIFI_REASON_NO_AP_FOUND = 201;
+    int WIFI_REASON_HANDSHAKE_TIMEOUT = 204;
+    int WIFI_REASON_CONNECTION_FAIL = 205;
 
     final class Type {
         public final static class Ctrl {
@@ -75,6 +71,9 @@ public interface BlufiParameter {
             public static final int SUBTYPE_WIFI_LIST = 0x11;
             public static final int SUBTYPE_ERROR = 0x12;
             public static final int SUBTYPE_CUSTOM_DATA = 0x13;
+            public static final int SUBTYPE_WIFI_STA_MAX_CONN_RETRY = 0x14;
+            public static final int SUBTYPE_WIFI_STA_CONN_END_REASON = 0x15;
+            public static final int SUBTYPE_WIFI_STA_CONN_RSSI = 0x16;
         }
     }
 }

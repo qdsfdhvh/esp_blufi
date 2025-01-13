@@ -9,8 +9,8 @@ public class BlufiLog {
    /**
     * @param cls The tag will use simple name of the cls.
     */
-   public BlufiLog(Class cls) {
-      mTag = String.format("[%s]", cls.getSimpleName());
+   public BlufiLog(String tag) {
+      mTag = tag;
    }
 
    /**

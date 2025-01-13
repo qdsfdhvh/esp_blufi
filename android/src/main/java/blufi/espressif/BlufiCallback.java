@@ -1,5 +1,4 @@
-package yu.legend.esp_blufi;
-
+package blufi.espressif;
 
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -7,10 +6,9 @@ import android.bluetooth.BluetoothGattService;
 
 import java.util.List;
 
-import yu.legend.esp_blufi.response.BlufiScanResult;
-import yu.legend.esp_blufi.response.BlufiStatusResponse;
-import yu.legend.esp_blufi.response.BlufiVersionResponse;
-
+import blufi.espressif.response.BlufiScanResult;
+import blufi.espressif.response.BlufiStatusResponse;
+import blufi.espressif.response.BlufiVersionResponse;
 
 public abstract class BlufiCallback {
     public static final int STATUS_SUCCESS = 0;
@@ -31,6 +29,8 @@ public abstract class BlufiCallback {
     public static final int CODE_CONF_ERR_POST_SOFTAP = -3003;
 
     public static final int CODE_GATT_WRITE_TIMEOUT = -4000;
+
+    public static final int CODE_WIFI_SCAN_FAIL = 11;
 
     /**
      * Callback invoked after BluetoothGattCallback receive onServicesDiscovered

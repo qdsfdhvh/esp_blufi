@@ -1,15 +1,17 @@
-package yu.legend.esp_blufi;
+package blufi.espressif;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCallback;
 import android.content.Context;
 
-import yu.legend.esp_blufi.params.BlufiConfigureParams;
+import java.util.List;
 
+import blufi.espressif.params.BlufiConfigureParams;
+import blufi.espressif.response.BlufiStatusResponse;
+import blufi.espressif.response.BlufiVersionResponse;
 
 public class BlufiClient {
-    // public static final String VERSION = BuildConfig.VERSION_NAME;
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "2.3.7";
 
     private final BlufiClientImpl mImpl;
 

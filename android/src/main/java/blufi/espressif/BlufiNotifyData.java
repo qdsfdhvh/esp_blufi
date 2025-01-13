@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi;
+package blufi.espressif;
 
 import java.io.ByteArrayOutputStream;
 

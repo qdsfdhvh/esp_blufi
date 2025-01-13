@@ -1,5 +1,7 @@
-package yu.legend.esp_blufi;
-import yu.legend.esp_blufi.params.BlufiParameter;
+package blufi.espressif;
+
+import blufi.espressif.params.BlufiParameter;
+
 class FrameCtrlData {
     private static final int FRAME_CTRL_POSITION_ENCRYPTED = 0;
     private static final int FRAME_CTRL_POSITION_CHECKSUM = 1;

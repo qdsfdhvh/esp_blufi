@@ -1,5 +1,4 @@
-package yu.legend.esp_blufi.response;
-
+package blufi.espressif.response;
 
 import java.util.Locale;
 

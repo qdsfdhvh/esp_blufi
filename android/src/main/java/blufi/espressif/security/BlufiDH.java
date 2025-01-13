@@ -1,4 +1,4 @@
-package yu.legend.esp_blufi.security;
+package blufi.espressif.security;
 
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -16,7 +16,6 @@ import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPublicKeySpec;
-
 
 public class BlufiDH {
     private final BigInteger mP;
