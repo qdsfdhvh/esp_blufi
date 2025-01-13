@@ -25,7 +25,6 @@ if (flutterVersionName == null) {
 android {
     namespace "yu.legend.esp_blufi_example"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -49,6 +48,9 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
         }
+    }
+    buildFeatures {
+        buildConfig true
     }
 }
 
