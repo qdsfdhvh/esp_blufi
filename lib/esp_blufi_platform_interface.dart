@@ -27,27 +27,23 @@ abstract class EspBlufiPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<void> testFunction() {
-    throw UnimplementedError('testFunction() has not been implemented.');
+  Future<bool?> startScan({String? filterString}) {
+    throw UnimplementedError('startScan() has not been implemented.');
   }
 
-  Future<void> scanDeviceInfo({String? filterString}) {
-    throw UnimplementedError('scanDeviceInfo() has not been implemented.');
-  }
-
-  Future<void> stopScan() {
+  Future<bool> stopScan() {
     throw UnimplementedError('stopScan() has not been implemented.');
   }
 
-  Future<void> connectPeripheral({String? peripheralAddress}) {
-    throw UnimplementedError('connectPeripheral() has not been implemented');
+  Future<bool> connect({String? deviceAddress}) {
+    throw UnimplementedError('connect() has not been implemented');
   }
 
-  Future requestCloseConnection() async {
+  Future<bool> requestCloseConnection() async {
     throw UnimplementedError('requestCloseConnection() has not been implemented');
   }
 
-  Future<void> requestDeviceWifiScan() async {
+  Future<bool> requestDeviceWifiScan() async {
     throw UnimplementedError('requestDeviceWifiScan() has not been implemented');
   }
 
@@ -55,19 +51,20 @@ abstract class EspBlufiPlatform extends PlatformInterface {
     throw UnimplementedError('configProvision() has not been implemented');
   }
 
-  void onMessageReceived({ResultCallback? successCallback, ResultCallback? errorCallback}) {
-    throw UnimplementedError('onMessageReceived() has not been implemented');
-  }
+  // Future<void> getAllPairedDevice() async {
+  //   throw UnimplementedError('getAllPairedDevice');
+  // }
 
-  Future<void> getAllPairedDevice() async {
-    throw UnimplementedError('getAllPairedDevice');
-  }
+  // Future<void> requestDeviceStatus() async {
+  //   throw UnimplementedError('requestDeviceStatus');
+  // }
 
-  Future<void> requestDeviceStatus() async {
-    throw UnimplementedError('requestDeviceStatus');
-  }
-
-  Future<void> sendCustomData({String? data}) async {
+  Future<bool> sendCustomData({String? data}) async {
     throw UnimplementedError('sendCustomData');
+  }
+
+  void onMessageReceived(
+      {ResultCallback? successCallback, ResultCallback? errorCallback}) {
+    throw UnimplementedError('onMessageReceived() has not been implemented');
   }
 }

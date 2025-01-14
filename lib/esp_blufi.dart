@@ -9,35 +9,28 @@ class EspBlufi {
     return EspBlufi.instance.getPlatformVersion();
   }
 
-  Future<void> testFunction() {
-    return EspBlufi.instance.testFunction();
+  Future<bool?> startScan({String? filterString}) {
+    return EspBlufi.instance.startScan(filterString: filterString);
   }
 
-  Future<void> scanDeviceInfo({String? filterString}) {
-    return EspBlufi.instance.scanDeviceInfo(filterString: filterString);
-  }
-
-  Future stopScan() async {
+  Future<bool> stopScan() async {
     return EspBlufi.instance.stopScan();
   }
 
-  Future connectPeripheral({String? peripheralAddress}) async {
-    return EspBlufi.instance
-        .connectPeripheral(peripheralAddress: peripheralAddress);
+  Future<bool> connect({String? deviceAddress}) async {
+    return EspBlufi.instance.connect(deviceAddress: deviceAddress);
   }
 
-  Future requestCloseConnection() async {
+  Future<bool> requestCloseConnection() async {
     return EspBlufi.instance.requestCloseConnection();
   }
 
-  Future requestDeviceWifiScan() async {
-    return EspBlufi.instance
-        .requestDeviceWifiScan();
+  Future<bool> requestDeviceWifiScan() async {
+    return EspBlufi.instance.requestDeviceWifiScan();
   }
 
   Future configProvision({String? username, String? password}) async {
-    return EspBlufi.instance
-        .configProvision(username: username, password: password);
+    return EspBlufi.instance.configProvision(username: username, password: password);
   }
 
   void onMessageReceived(
@@ -46,15 +39,15 @@ class EspBlufi {
         successCallback: successCallback, errorCallback: errorCallback);
   }
 
-  Future getAllPairedDevice() async {
-    return EspBlufi.instance.getAllPairedDevice();
-  }
+  // Future getAllPairedDevice() async {
+  //   return EspBlufi.instance.getAllPairedDevice();
+  // }
 
-  Future requestDeviceStatus() async {
-    return EspBlufi.instance.requestDeviceStatus();
-  }
+  // Future requestDeviceStatus() async {
+  //   return EspBlufi.instance.requestDeviceStatus();
+  // }
 
-  Future sendCustomData({String? data}) async {
+  Future<bool> sendCustomData({String? data}) async {
     return EspBlufi.instance.sendCustomData(data: data);
   }
 }

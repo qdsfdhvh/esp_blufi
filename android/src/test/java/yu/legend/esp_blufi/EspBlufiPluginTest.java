@@ -3,9 +3,11 @@ package yu.legend.esp_blufi;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import org.junit.jupiter.api.Test;
+
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import org.junit.Test;
+
 
 /**
  * This demonstrates a simple unit test of the Java portion of this plugin's implementation.

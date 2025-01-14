@@ -32,41 +32,35 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
   }
 
   @override
-  Future<void> testFunction() async {
-    await methodChannel.invokeMethod<String>('testFunction');
-  }
-
-  @override
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 
   @override
-  Future<bool?> scanDeviceInfo({String? filterString}) async {
-    final bool? isEnable =
-    await methodChannel.invokeMethod('scanDeviceInfo', <String, dynamic>{'filter': filterString});
+  Future<bool?> startScan({String? filterString}) async {
+    final bool? isEnable = await methodChannel.invokeMethod('startScan', <String, dynamic>{'filter': filterString});
     return isEnable;
   }
 
   @override
-  Future stopScan() async {
-    await methodChannel.invokeMethod('stopScan');
+  Future<bool> stopScan() async {
+    return await methodChannel.invokeMethod('stopScan');
   }
 
   @override
-  Future connectPeripheral({String? peripheralAddress}) async {
-    await methodChannel.invokeMethod('connectPeripheral', <String, dynamic>{'peripheral': peripheralAddress});
+  Future<bool> connect({String? deviceAddress}) async {
+    return await methodChannel.invokeMethod('connect', <String, dynamic>{'deviceAddress': deviceAddress});
   }
 
   @override
-  Future requestCloseConnection() async {
-    await methodChannel.invokeMethod('requestCloseConnection');
+  Future<bool> requestCloseConnection() async {
+    return await methodChannel.invokeMethod('requestCloseConnection');
   }
 
   @override
-  Future<void> requestDeviceWifiScan() async {
-    await methodChannel.invokeMethod('requestDeviceWifiScan');
+  Future<bool> requestDeviceWifiScan() async {
+    return await methodChannel.invokeMethod('requestDeviceWifiScan');
   }
 
   @override
@@ -74,19 +68,19 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
     await methodChannel.invokeMethod('configProvision', <String, dynamic>{'username': username, 'password': password});
   }
 
-  @override
-  Future<void> getAllPairedDevice() async {
-    await methodChannel.invokeMethod('getAllPairedDevice');
-  }
+  // @override
+  // Future<void> getAllPairedDevice() async {
+  //   await methodChannel.invokeMethod('getAllPairedDevice');
+  // }
+
+  // @override
+  // Future<void> requestDeviceStatus() async {
+  //   await methodChannel.invokeMethod('requestDeviceStatus');
+  // }
 
   @override
-  Future<void> requestDeviceStatus() async {
-    await methodChannel.invokeMethod('requestDeviceStatus');
-  }
-
-  @override
-  Future<void> sendCustomData({String? data}) async {
-    await methodChannel.invokeMethod('sendCustomData', <String, dynamic>{'data': data});
+  Future<bool> sendCustomData({String? data}) async {
+    return await methodChannel.invokeMethod('sendCustomData', <String, dynamic>{'data': data});
   }
 
   speechResultsHandler(dynamic event) {
