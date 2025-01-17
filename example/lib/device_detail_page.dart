@@ -18,7 +18,8 @@ class DeviceDetailPage extends StatefulWidget {
   State<DeviceDetailPage> createState() => _DeviceListPageState();
 }
 
-class _DeviceListPageState extends State<DeviceDetailPage> with SingleTickerProviderStateMixin {
+class _DeviceListPageState extends State<DeviceDetailPage>
+    with SingleTickerProviderStateMixin {
   final _espBlufiPlugin = EspBlufi();
 
   final List<String> _consoles = [];
@@ -105,7 +106,8 @@ class _DeviceListPageState extends State<DeviceDetailPage> with SingleTickerProv
             });
           } else {
             setState(() {
-              _consoles.add('Device not connected, opMode: ${data.opMode}, staConnectionStatus: ${data.staConnectionStatus}');
+              _consoles.add(
+                  'Device not connected, opMode: ${data.opMode}, staConnectionStatus: ${data.staConnectionStatus}');
             });
           }
         } else {
@@ -122,6 +124,12 @@ class _DeviceListPageState extends State<DeviceDetailPage> with SingleTickerProv
           }
         });
         break;
+      case BlufiError():
+        setState(() {
+          _isWaitingConnect = false;
+          _consoles.add('Error: ${data.errorCode}');
+        });
+        break;
       default:
         setState(() {
           _consoles.add(data.toString());
@@ -132,6 +140,7 @@ class _DeviceListPageState extends State<DeviceDetailPage> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(widget.deviceName),
         leading: IconButton(
@@ -247,7 +256,9 @@ class _DeviceListPageState extends State<DeviceDetailPage> with SingleTickerProv
                     return const WifiScanPage();
                   }),
                 );
-                if (map != null && map.containsKey('ssid') && map.containsKey('password')) {
+                if (map != null &&
+                    map.containsKey('ssid') &&
+                    map.containsKey('password')) {
                   _espBlufiPlugin.configProvision(
                     ssid: map['ssid']!,
                     password: map['password']!,

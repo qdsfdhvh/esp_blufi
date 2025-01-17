@@ -21,6 +21,8 @@ class _WifiScanPageState extends State<WifiScanPage> {
   late final TextEditingController _passwordController;
   bool _isCanConnect = false;
 
+  bool _isFilter5G = true;
+
   @override
   void initState() {
     _passwordController = TextEditingController();
@@ -71,6 +73,18 @@ class _WifiScanPageState extends State<WifiScanPage> {
           },
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
+        actions: [
+          const Text('Filter 5G', style: TextStyle(
+            fontSize: 16,
+          )),
+          const SizedBox(width: 4),
+          Switch(value: _isFilter5G, onChanged: (value) {
+            setState(() {
+              _isFilter5G = value;
+            });
+          }),
+           const SizedBox(width: 4),
+        ],
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 320), // 动画时长
@@ -87,10 +101,13 @@ class _WifiScanPageState extends State<WifiScanPage> {
         child: Text("NO SCANNED RESULTS"),
       );
     }
+    final displayAccessPoints = _isFilter5G
+        ? _accessPoints.where((element) => element.frequency < 5000).toList()
+        : _accessPoints;
     return ListView.separated(
-      itemCount: _accessPoints.length,
+      itemCount: displayAccessPoints.length,
       itemBuilder: (context, index) {
-        final accessPoint = _accessPoints[index];
+        final accessPoint = displayAccessPoints[index];
         final is5GHz = accessPoint.frequency >= 5000;
         return ListTile(
           onTap: () {
