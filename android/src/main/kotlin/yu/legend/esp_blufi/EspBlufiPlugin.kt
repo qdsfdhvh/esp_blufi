@@ -127,7 +127,7 @@ class EspBlufiPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHan
             sink = null
         }
 
-        fun postMessage(message: EspBlufiMessage) {
+        fun postMessage(message: EspBlufiData) {
             sink?.let {
                 handler.post {
                     it.success(message.toString())

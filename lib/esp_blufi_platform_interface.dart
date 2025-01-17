@@ -51,13 +51,13 @@ abstract class EspBlufiPlatform extends PlatformInterface {
     throw UnimplementedError('configProvision() has not been implemented');
   }
 
-  // Future<void> getAllPairedDevice() async {
-  //   throw UnimplementedError('getAllPairedDevice');
-  // }
+  Future<void> getAllPairedDevice() async {
+    throw UnimplementedError('getAllPairedDevice');
+  }
 
-  // Future<void> requestDeviceStatus() async {
-  //   throw UnimplementedError('requestDeviceStatus');
-  // }
+  Future<void> requestDeviceStatus() async {
+    throw UnimplementedError('requestDeviceStatus');
+  }
 
   Future<bool> sendCustomData({String? data}) async {
     throw UnimplementedError('sendCustomData');

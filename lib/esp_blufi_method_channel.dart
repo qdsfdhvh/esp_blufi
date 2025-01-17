@@ -1,8 +1,10 @@
+import 'package:esp_blufi/esp_blufi_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'esp_blufi_platform_interface.dart';
 
+typedef BlufiDataCallback = void Function(EspBlufiData data);
 typedef ResultCallback = void Function(String? data);
 
 
@@ -68,15 +70,15 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
     await methodChannel.invokeMethod('configProvision', <String, dynamic>{'username': username, 'password': password});
   }
 
-  // @override
-  // Future<void> getAllPairedDevice() async {
-  //   await methodChannel.invokeMethod('getAllPairedDevice');
-  // }
+  @override
+  Future<void> getAllPairedDevice() async {
+    await methodChannel.invokeMethod('getAllPairedDevice');
+  }
 
-  // @override
-  // Future<void> requestDeviceStatus() async {
-  //   await methodChannel.invokeMethod('requestDeviceStatus');
-  // }
+  @override
+  Future<void> requestDeviceStatus() async {
+    await methodChannel.invokeMethod('requestDeviceStatus');
+  }
 
   @override
   Future<bool> sendCustomData({String? data}) async {

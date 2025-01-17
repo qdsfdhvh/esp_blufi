@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:esp_blufi/esp_blufi_data.dart';
+import 'package:esp_blufi/esp_blufi_method_channel.dart';
+
 import 'esp_blufi_platform_interface.dart';
 
 typedef ResultCallback = void Function(String? data);
@@ -30,22 +35,30 @@ class EspBlufi {
   }
 
   Future configProvision({String? username, String? password}) async {
-    return EspBlufi.instance.configProvision(username: username, password: password);
+    return EspBlufi.instance
+        .configProvision(username: username, password: password);
   }
 
   void onMessageReceived(
-      {ResultCallback? successCallback, ResultCallback? errorCallback}) {
+      {BlufiDataCallback? successCallback, ResultCallback? errorCallback}) {
     EspBlufi.instance.onMessageReceived(
-        successCallback: successCallback, errorCallback: errorCallback);
+        successCallback: (String? data) {
+          if (successCallback != null && data != null) {
+            Map<String, dynamic> mapData = json.decode(data);
+            final blufiData = EspBlufiData.fromJson(mapData);
+            successCallback.call(blufiData);
+          }
+        },
+        errorCallback: errorCallback);
   }
 
-  // Future getAllPairedDevice() async {
-  //   return EspBlufi.instance.getAllPairedDevice();
-  // }
+  Future getAllPairedDevice() async {
+    return EspBlufi.instance.getAllPairedDevice();
+  }
 
-  // Future requestDeviceStatus() async {
-  //   return EspBlufi.instance.requestDeviceStatus();
-  // }
+  Future requestDeviceStatus() async {
+    return EspBlufi.instance.requestDeviceStatus();
+  }
 
   Future<bool> sendCustomData({String? data}) async {
     return EspBlufi.instance.sendCustomData(data: data);

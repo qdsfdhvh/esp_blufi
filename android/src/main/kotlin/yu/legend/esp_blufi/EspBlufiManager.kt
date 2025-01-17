@@ -28,7 +28,7 @@ import io.flutter.plugin.common.MethodChannel
 
 class EspBlufiManager(
     private val activityPluginBinding: ActivityPluginBinding,
-    private val postMessage: (EspBlufiMessage) -> Unit,
+    private val postMessage: (EspBlufiData) -> Unit,
 ) {
     private val activity get() = activityPluginBinding.activity
 
@@ -95,7 +95,7 @@ class EspBlufiManager(
                 blufiFilter = filter,
                 onAddDevice = { scanResult ->
                     deviceMap[scanResult.device.address] = scanResult
-                    postMessage(EspBlufiMessage.Device(scanResult))
+                    postMessage(EspBlufiData.Device(scanResult))
                 }
             ).also {
                 scanCallback = it
@@ -236,7 +236,7 @@ class EspBlufiManager(
     }
 
     private class CustomGattCallback(
-        private val postMessage: (EspBlufiMessage) -> Unit,
+        private val postMessage: (EspBlufiData) -> Unit,
     ) : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -249,7 +249,7 @@ class EspBlufiManager(
                 gatt.close()
             }
             postMessage(
-                EspBlufiMessage.ConnectionStateChange(
+                EspBlufiData.ConnectionStateChange(
                     address = gatt.device.address,
                     status = status,
                     state = newState,
@@ -259,7 +259,7 @@ class EspBlufiManager(
 
         override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
             postMessage(
-                EspBlufiMessage.MtuChange(
+                EspBlufiData.MtuChange(
                     address = gatt.device.address,
                     status = status,
                     mtu = mtu,
@@ -289,7 +289,7 @@ class EspBlufiManager(
                 descriptor.characteristic.uuid == BlufiParameter.UUID_NOTIFICATION_CHARACTERISTIC
             ) {
                 postMessage(
-                    EspBlufiMessage.SetNotification(
+                    EspBlufiData.SetNotification(
                         address = gatt.device.address,
                         status = status,
                     )
@@ -313,7 +313,7 @@ class EspBlufiManager(
     }
 
     private class CustomBlufiCallback(
-        private val postMessage: (EspBlufiMessage) -> Unit,
+        private val postMessage: (EspBlufiData) -> Unit,
     ) : BlufiCallback() {
         override fun onGattPrepared(
             client: BlufiClient,
@@ -325,7 +325,7 @@ class EspBlufiManager(
             if (service == null || writeChar == null || notifyChar == null) {
                 gatt.disconnect()
                 postMessage(
-                    EspBlufiMessage.BlufiGattPrepared(
+                    EspBlufiData.BlufiGattPrepared(
                         address = gatt.device.address,
                         hasService = service != null,
                         hasWriteChar = writeChar != null,
@@ -339,7 +339,7 @@ class EspBlufiManager(
             val mtu = BlufiConstants.DEFAULT_MTU_LENGTH
             val requestMtu = gatt.requestMtu(mtu)
             postMessage(
-                EspBlufiMessage.BlufiGattPrepared(
+                EspBlufiData.BlufiGattPrepared(
                     address = gatt.device.address,
                     hasService = true,
                     hasWriteChar = true,
@@ -352,7 +352,7 @@ class EspBlufiManager(
 
         override fun onNegotiateSecurityResult(client: BlufiClient, status: Int) {
             postMessage(
-                EspBlufiMessage.BlufiNegotiateSecurityResult(
+                EspBlufiData.BlufiNegotiateSecurityResult(
                     status = status,
                 )
             )
@@ -360,7 +360,7 @@ class EspBlufiManager(
 
         override fun onPostConfigureParams(client: BlufiClient, status: Int) {
             postMessage(
-                EspBlufiMessage.BlufiPostConfigureParams(
+                EspBlufiData.BlufiPostConfigureParams(
                     status = status,
                 )
             )
@@ -372,7 +372,7 @@ class EspBlufiManager(
             response: BlufiStatusResponse,
         ) {
             postMessage(
-                EspBlufiMessage.BlufiDeviceStatusResponse(
+                EspBlufiData.BlufiDeviceStatusResponse(
                     status = status,
                     statusMessage = response.generateValidInfo(),
                 )
@@ -385,7 +385,7 @@ class EspBlufiManager(
             results: List<BlufiScanResult>,
         ) {
             postMessage(
-                EspBlufiMessage.BlufiScanResult(
+                EspBlufiData.BlufiScanResult(
                     status = status,
                     results = results,
                 )
@@ -398,7 +398,7 @@ class EspBlufiManager(
             response: BlufiVersionResponse,
         ) {
             postMessage(
-                EspBlufiMessage.BlufiDeviceVersion(
+                EspBlufiData.BlufiDeviceVersion(
                     status = status,
                     version = if (status == STATUS_SUCCESS) response.versionString else "",
                 )
@@ -407,7 +407,7 @@ class EspBlufiManager(
 
         override fun onPostCustomDataResult(client: BlufiClient, status: Int, data: ByteArray) {
             postMessage(
-                EspBlufiMessage.BlufiPostCustomDataResult(
+                EspBlufiData.BlufiPostCustomDataResult(
                     data = String(data),
                     status = status,
                 )
@@ -416,7 +416,7 @@ class EspBlufiManager(
 
         override fun onReceiveCustomData(client: BlufiClient, status: Int, data: ByteArray) {
             postMessage(
-                EspBlufiMessage.BlufiReceiveCustomData(
+                EspBlufiData.BlufiReceiveCustomData(
                     status = status,
                     data = if (status == STATUS_SUCCESS) String(data) else "",
                 )
@@ -425,7 +425,7 @@ class EspBlufiManager(
 
         override fun onError(client: BlufiClient, errCode: Int) {
             postMessage(
-                EspBlufiMessage.BlufiError(
+                EspBlufiData.BlufiError(
                     errCode = errCode,
                 )
             )

@@ -4,10 +4,10 @@ import android.bluetooth.le.ScanResult
 import org.json.JSONArray
 import org.json.JSONObject
 
-sealed interface EspBlufiMessage {
+sealed interface EspBlufiData {
     class Device(
         private val result: ScanResult
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("ble_scan_result") {
                 put("address", result.device.address)
@@ -21,7 +21,7 @@ sealed interface EspBlufiMessage {
         private val address: String,
         private val status: Int,
         private val state: Int,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("ble_gatt_state") {
                 put("address", address)
@@ -35,7 +35,7 @@ sealed interface EspBlufiMessage {
         private val address: String,
         private val status: Int,
         private val mtu: Int,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("ble_mtu_change") {
                 put("address", address)
@@ -48,7 +48,7 @@ sealed interface EspBlufiMessage {
     class SetNotification(
         private val address: String,
         private val status: Int,
-    ) :EspBlufiMessage {
+    ) :EspBlufiData {
         override fun toString(): String {
             return response("ble_set_notification") {
                 put("address", address)
@@ -66,7 +66,7 @@ sealed interface EspBlufiMessage {
         private val hasNotifyChar: Boolean,
         private val requestMtu: Boolean,
         private val mtu: Int,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_gatt_prepared") {
                 put("address", address)
@@ -81,7 +81,7 @@ sealed interface EspBlufiMessage {
 
     class BlufiNegotiateSecurityResult(
         private val status: Int,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_negotiate_security_result") {
                 put("status", status)
@@ -91,7 +91,7 @@ sealed interface EspBlufiMessage {
 
     class BlufiPostConfigureParams(
         private val status: Int
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_post_configure_params") {
                 put("status", status)
@@ -102,7 +102,7 @@ sealed interface EspBlufiMessage {
     class BlufiDeviceStatusResponse(
         private val status: Int,
         private val statusMessage: String,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_device_status_response") {
                 put("status", status)
@@ -114,7 +114,7 @@ sealed interface EspBlufiMessage {
     class BlufiScanResult(
         val status: Int,
         val results: List<blufi.espressif.response.BlufiScanResult>,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_scan_result") {
                 put("status", status)
@@ -134,7 +134,7 @@ sealed interface EspBlufiMessage {
     class BlufiDeviceVersion(
         private val status: Int,
         private val version: String,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_device_version") {
                 put("status", status)
@@ -146,7 +146,7 @@ sealed interface EspBlufiMessage {
     class BlufiPostCustomDataResult(
         private val data: String,
         private val status: Int,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_post_custom_data_result") {
                 put("data", data)
@@ -158,7 +158,7 @@ sealed interface EspBlufiMessage {
     class BlufiReceiveCustomData(
         private val status: Int,
         private val data: String,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_receive_custom_data") {
                 put("status", status)
@@ -169,7 +169,7 @@ sealed interface EspBlufiMessage {
 
     class BlufiError(
         private val errCode: Int,
-    ) : EspBlufiMessage {
+    ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_error") {
                 put("errCode", errCode)
