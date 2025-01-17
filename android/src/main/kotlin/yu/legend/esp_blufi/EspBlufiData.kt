@@ -1,5 +1,6 @@
 package yu.legend.esp_blufi
 
+import blufi.espressif.response.BlufiStatusResponse
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -100,12 +101,24 @@ sealed interface EspBlufiData {
 
     class BlufiDeviceStatusResponse(
         private val status: Int,
-        private val statusMessage: String,
+        private val response: BlufiStatusResponse,
     ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_device_status_response") {
                 put("status", status)
-                put("status_message", statusMessage)
+                put("op_mode", response.opMode)
+                // station
+                put("sta_connection_status", response.staConnectionStatus)
+                put("sta_bssid", response.staBSSID)
+                put("sta_ssid", response.staSSID)
+                put("sta_password", response.staPassword)
+                // ap
+                put("soft_ap_connection_count", response.softAPConnectionCount)
+                put("soft_ap_max_connection_count", response.softAPMaxConnectionCount)
+                put("soft_ap_security", response.softAPSecurity)
+                put("soft_ap_channel", response.softAPChannel)
+                put("soft_ap_ssid", response.softAPSSID)
+                put("soft_ap_password", response.softAPPassword)
             }
         }
     }

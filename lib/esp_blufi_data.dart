@@ -202,23 +202,53 @@ class BlufiPostConfigureParams extends EspBlufiData {
 
 class BlufiDeviceStatusResponse extends EspBlufiData {
   final int status;
-  final String statusMessage;
+  final int opMode;
+  final int staConnectionStatus;
+  final String? staBSSID;
+  final String? staSSID;
+  final String? staPassword;
+  final int? softAPConnectionCount;
+  final int? softAPMaxConnectionCount;
+  final int? softAPSecurity;
+  final int? softAPChannel;
+  final String? softAPSSID;
+  final String? softAPPassword;
 
   BlufiDeviceStatusResponse({
     required this.status,
-    required this.statusMessage,
+    required this.opMode,
+    required this.staConnectionStatus,
+    required this.staBSSID,
+    required this.staSSID,
+    required this.staPassword,
+    required this.softAPConnectionCount,
+    required this.softAPMaxConnectionCount,
+    required this.softAPSecurity,
+    required this.softAPChannel,
+    required this.softAPSSID,
+    required this.softAPPassword,
   });
 
   factory BlufiDeviceStatusResponse.fromJson(Map<String, dynamic> json) {
     return BlufiDeviceStatusResponse(
       status: json['status'],
-      statusMessage: json['status_message'],
+      opMode: json['op_mode'],
+      staConnectionStatus: json['sta_connection_status'],
+      staBSSID: json['sta_bssid'],
+      staSSID: json['sta_ssid'],
+      staPassword: json['sta_password'],
+      softAPConnectionCount: json['soft_ap_connection_count'],
+      softAPMaxConnectionCount: json['soft_ap_max_connection_count'],
+      softAPSecurity: json['soft_ap_security'],
+      softAPChannel: json['soft_ap_channel'],
+      softAPSSID: json['soft_ap_ssid'],
+      softAPPassword: json['soft_ap_password'],
     );
   }
 
   @override
   String toString() {
-    return 'BlufiDeviceStatusResponse{status: $status, statusMessage: $statusMessage}';
+    return 'BlufiDeviceStatusResponse{status: $status, opMode: $opMode, staConnectionStatus: $staConnectionStatus, staBSSID: $staBSSID, staSSID: $staSSID, staPassword: $staPassword, softAPConnectionCount: $softAPConnectionCount, softAPMaxConnectionCount: $softAPMaxConnectionCount, softAPSecurity: $softAPSecurity, softAPChannel: $softAPChannel, softAPSSID: $softAPSSID, softAPPassword: $softAPPassword}';
   }
 }
 
@@ -337,7 +367,7 @@ class BlufiReceiveCustomData extends EspBlufiData {
 }
 
 class BlufiError extends EspBlufiData {
-  final int errorCode;
+  final int? errorCode;
 
   BlufiError({
     required this.errorCode,
@@ -345,7 +375,7 @@ class BlufiError extends EspBlufiData {
 
   factory BlufiError.fromJson(Map<String, dynamic> json) {
     return BlufiError(
-      errorCode: json['error_code'],
+      errorCode: json['err_code'],
     );
   }
 

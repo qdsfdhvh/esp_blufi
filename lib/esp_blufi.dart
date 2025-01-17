@@ -60,9 +60,9 @@ class EspBlufi {
     return EspBlufi.instance.requestDeviceWifiScan();
   }
 
-  Future configProvision({String? username, String? password}) async {
+  Future configProvision({String? ssid, String? password}) async {
     return EspBlufi.instance
-        .configProvision(username: username, password: password);
+        .configProvision(ssid: ssid, password: password);
   }
 
   Future<bool> sendCustomData({String? data}) async {

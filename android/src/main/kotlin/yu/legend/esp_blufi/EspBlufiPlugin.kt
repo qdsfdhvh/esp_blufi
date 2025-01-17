@@ -101,9 +101,9 @@ class EspBlufiPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHan
                 }
 
                 "configProvision" -> {
-                    val userName = call.argument<String>("username")
+                    val ssid = call.argument<String>("ssid")
                     val password = call.argument<String>("password")
-                    manager.configProvision(userName, password, result)
+                    manager.configProvision(ssid, password, result)
                 }
 
                 "sendCustomData" -> {

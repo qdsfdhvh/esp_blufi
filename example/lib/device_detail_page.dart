@@ -1,5 +1,7 @@
 import 'package:esp_blufi/esp_blufi.dart';
 import 'package:esp_blufi/esp_blufi_data.dart';
+import 'package:esp_blufi_example/wifi_scan_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DeviceDetailPage extends StatefulWidget {
@@ -16,7 +18,7 @@ class DeviceDetailPage extends StatefulWidget {
   State<DeviceDetailPage> createState() => _DeviceListPageState();
 }
 
-class _DeviceListPageState extends State<DeviceDetailPage> {
+class _DeviceListPageState extends State<DeviceDetailPage> with SingleTickerProviderStateMixin {
   final _espBlufiPlugin = EspBlufi();
 
   final List<String> _consoles = [];
@@ -93,9 +95,24 @@ class _DeviceListPageState extends State<DeviceDetailPage> {
         });
         break;
       case BlufiDeviceStatusResponse():
-        setState(() {
-          _consoles.add(data.statusMessage);
-        });
+        if (data.opMode == 1 || data.opMode == 3) {
+          if (data.staConnectionStatus == 0) {
+            setState(() {
+              _consoles.add('Device connected, ');
+              _consoles.add('  BSSID: ${data.staBSSID}');
+              _consoles.add('  SSID: ${data.staSSID}');
+              // _consoles.add('  PASSWORD: ${data.staPassword}');
+            });
+          } else {
+            setState(() {
+              _consoles.add('Device not connected, opMode: ${data.opMode}, staConnectionStatus: ${data.staConnectionStatus}');
+            });
+          }
+        } else {
+          setState(() {
+            _consoles.add('Device not connected, opMode: ${data.opMode}');
+          });
+        }
       case BlufiPostCustomDataResult():
         setState(() {
           if (data.status == 0) {
@@ -216,13 +233,26 @@ class _DeviceListPageState extends State<DeviceDetailPage> {
               },
             ),
             _button(
-              text: 'Provision',
+              text: 'Config',
               enabled: _isConnected,
-              onPressed: () {
+              onPressed: () async {
                 // _espBlufiPlugin.configProvision(
                 //   username: 'admin',
                 //   password: 'admin',
                 // );
+
+                final map = await Navigator.push<Map<String, String>>(
+                  context,
+                  CupertinoPageRoute(builder: (_) {
+                    return const WifiScanPage();
+                  }),
+                );
+                if (map != null && map.containsKey('ssid') && map.containsKey('password')) {
+                  _espBlufiPlugin.configProvision(
+                    ssid: map['ssid']!,
+                    password: map['password']!,
+                  );
+                }
               },
             ),
             _button(

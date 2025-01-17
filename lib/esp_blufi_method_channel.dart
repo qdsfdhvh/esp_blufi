@@ -80,13 +80,10 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
 
   @override
   Future<List<ScanResult>> getAllPairedDevice() async {
-    final list =
-        await methodChannel.invokeMethod<List<String>>('getAllPairedDevice');
-    return list?.map((e) {
-          Map<String, dynamic> mapData = json.decode(e);
-          return ScanResult.fromJson(mapData);
-        }).toList() ??
-        [];
+    final data = await methodChannel.invokeMethod<String>('getAllPairedDevice');
+    if (data == null) return [];
+    List<dynamic> mapData = json.decode(data);
+    return mapData.map((e) => ScanResult.fromJson(e)).toList();
   }
 
   @override
@@ -128,9 +125,9 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
   }
 
   @override
-  Future<void> configProvision({String? username, String? password}) async {
+  Future<void> configProvision({String? ssid, String? password}) async {
     await methodChannel.invokeMethod('configProvision',
-        <String, dynamic>{'username': username, 'password': password});
+        <String, dynamic>{'ssid': ssid, 'password': password});
   }
 
   @override

@@ -26,6 +26,11 @@ class _DeviceListPageState extends State<DeviceListPage> {
     _espBlufiPlugin.addMessageReceived(
       callback: _onMessageReceived,
     );
+    _espBlufiPlugin.getAllPairedDevice().then((list) {
+      for (final device in list) {
+        _scanResults[device.address] = device;
+      }
+    });
     _startScan();
   }
 
@@ -39,22 +44,22 @@ class _DeviceListPageState extends State<DeviceListPage> {
 
   void _onMessageReceived(EspBlufiData data) {
     switch (data) {
-          case ScanResult():
-            if (_scanResults.containsKey(data.address)) {
-              final oldData = _scanResults[data.address]!;
-              if (oldData.name != data.name || oldData.rssi != data.rssi) {
-                _scanResults[data.address] = data;
-                setState(() {});
-              }
-            } else {
-              _scanResults[data.address] = data;
-              setState(() {});
-            }
-            break;
-          default:
-            // do nothing
-            break;
+      case ScanResult():
+        if (_scanResults.containsKey(data.address)) {
+          final oldData = _scanResults[data.address]!;
+          if (oldData.name != data.name || oldData.rssi != data.rssi) {
+            _scanResults[data.address] = data;
+            setState(() {});
+          }
+        } else {
+          _scanResults[data.address] = data;
+          setState(() {});
         }
+        break;
+      default:
+        // do nothing
+        break;
+    }
   }
 
   @override
@@ -81,7 +86,8 @@ class _DeviceListPageState extends State<DeviceListPage> {
                       _stopScan();
                       waitToRefreshScan = true;
                     }
-                    await Navigator.push(context, CupertinoPageRoute(builder: (_) {
+                    await Navigator.push(context,
+                        CupertinoPageRoute(builder: (_) {
                       return DeviceDetailPage(
                         deviceAddress: data.address,
                         deviceName: data.name,

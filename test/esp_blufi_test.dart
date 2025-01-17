@@ -36,7 +36,7 @@ abstract class MockEspBlufiPlatform
   }
 
   @override
-  Future<void> configProvision({String? username, String? password}) {
+  Future<void> configProvision({String? ssid, String? password}) {
     throw UnimplementedError();
   }
 

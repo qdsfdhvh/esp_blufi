@@ -79,7 +79,7 @@ abstract class EspBlufiPlatform extends PlatformInterface {
         'requestDeviceWifiScan() has not been implemented');
   }
 
-  Future<void> configProvision({String? username, String? password}) async {
+  Future<void> configProvision({String? ssid, String? password}) async {
     throw UnimplementedError('configProvision() has not been implemented');
   }
 

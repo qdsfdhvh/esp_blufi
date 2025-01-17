@@ -26,6 +26,7 @@ import blufi.espressif.response.BlufiStatusResponse
 import blufi.espressif.response.BlufiVersionResponse
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONArray
 import org.json.JSONObject
 
 
@@ -64,13 +65,15 @@ class EspBlufiManager(
 
         val bondedDevices = adapter.bondedDevices
         result.success(
-            bondedDevices.map { device ->
-                JSONObject().apply {
-                    put("address", device.address)
-                    put("name", device.name)
-                    put("rssi", "")
-                }.toString()
-            }
+            JSONArray().apply {
+                bondedDevices.forEach { device ->
+                    put(JSONObject().apply {
+                        put("address", device.address)
+                        put("name", device.name)
+                        put("rssi", 0)
+                    })
+                }
+            }.toString()
         )
     }
 
@@ -153,7 +156,10 @@ class EspBlufiManager(
         Log.d("AAA", "connect deviceAddress:$deviceId")
         if (deviceId.isNullOrEmpty() || !deviceMap.containsKey(deviceId)) {
             Log.d("AAA", "keys -> " + deviceMap.keys.joinToString { it })
-            Log.d("AAA", "not find device ${deviceId.isNullOrEmpty()} ${deviceMap.containsKey(deviceId)}")
+            Log.d(
+                "AAA",
+                "not find device ${deviceId.isNullOrEmpty()} ${deviceMap.containsKey(deviceId)}"
+            )
             result.success(false)
         } else {
             connectInternal(deviceMap[deviceId]!!.device)
@@ -210,11 +216,11 @@ class EspBlufiManager(
     }
 
     fun configProvision(
-        username: String?,
+        ssid: String?,
         password: String?,
         result: MethodChannel.Result,
     ) {
-        if (username.isNullOrEmpty() || password.isNullOrEmpty()) {
+        if (ssid.isNullOrEmpty() || password.isNullOrEmpty()) {
             result.success(false)
             return
         }
@@ -222,7 +228,7 @@ class EspBlufiManager(
             it.configure(
                 BlufiConfigureParams().apply {
                     opMode = 1
-                    staSSIDBytes = username.toByteArray()
+                    staSSIDBytes = ssid.toByteArray()
                     staPassword = password
                 }
             )
@@ -408,7 +414,7 @@ class EspBlufiManager(
             postMessage(
                 EspBlufiData.BlufiDeviceStatusResponse(
                     status = status,
-                    statusMessage = response.generateValidInfo(),
+                    response = response,
                 )
             )
         }
