@@ -211,7 +211,8 @@ class _DeviceListPageState extends State<DeviceDetailPage>
                 if (success) {
                   setState(() {
                     _consoles.add('Disconnected Successfully');
-                    _isWaitingConnect = true;
+                    // _isWaitingConnect = true;
+                    _isConnected = false;
                   });
                 } else {
                   setState(() {
