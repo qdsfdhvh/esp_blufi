@@ -2,6 +2,7 @@ package yu.legend.esp_blufi
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -65,6 +66,10 @@ class EspBlufiPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHan
                     manager.getPlatformVersion(result)
                 }
 
+                "getAllPairedDevice" -> {
+                    manager.getAllPairedDevice(result)
+                }
+
                 "startScan" -> {
                     val filter = call.argument<String>("filter")
                     manager.startScan(filter, result)
@@ -83,6 +88,14 @@ class EspBlufiPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHan
                     manager.requestCloseConnection(result)
                 }
 
+                "requestDeviceVersion" -> {
+                    manager.requestDeviceVersion(result)
+                }
+
+                "requestDeviceStatus" -> {
+                    manager.requestDeviceStatus(result)
+                }
+
                 "requestDeviceWifiScan" -> {
                     manager.requestDeviceWifiScan(result)
                 }
@@ -90,20 +103,16 @@ class EspBlufiPlugin : FlutterPlugin, ActivityAware, MethodChannel.MethodCallHan
                 "configProvision" -> {
                     val userName = call.argument<String>("username")
                     val password = call.argument<String>("password")
-                    manager.configure(userName, password, result)
-                }
-
-                "getAllPairedDevice" -> {
-                    manager.getAllPairedDevice()
-                }
-
-                "requestDeviceStatus" -> {
-                    manager.requestDeviceStatus()
+                    manager.configProvision(userName, password, result)
                 }
 
                 "sendCustomData" -> {
                     val data = call.argument<String>("data")
                     manager.sendCustomData(data, result)
+                }
+
+                "negotiateSecurity" -> {
+                    manager.negotiateSecurity(result)
                 }
 
                 else -> result.notImplemented()

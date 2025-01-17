@@ -1,5 +1,7 @@
 import 'package:esp_blufi/esp_blufi.dart';
 import 'package:esp_blufi/esp_blufi_data.dart';
+import 'package:esp_blufi_example/device_detail_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DeviceListPage extends StatefulWidget {
@@ -63,6 +65,15 @@ class _DeviceListPageState extends State<DeviceListPage> {
                   title: Text(data.name),
                   subtitle: Text(data.address),
                   trailing: Text('${data.rssi}'),
+                  onTap: () {
+                    _stopScan();
+                    Navigator.push(context, CupertinoPageRoute(builder: (_) {
+                      return DeviceDetailPage(
+                        deviceAddress: data.address,
+                        deviceName: data.name,
+                      );
+                    }));
+                  },
                 );
               },
             ),

@@ -23,8 +23,17 @@ abstract class EspBlufiPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  void onMessageReceived(
+      {ResultCallback? successCallback, ResultCallback? errorCallback}) {
+    throw UnimplementedError('onMessageReceived() has not been implemented');
+  }
+
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
+  }
+
+  Future<List<String>?> getAllPairedDevice() async {
+    throw UnimplementedError('getAllPairedDevice');
   }
 
   Future<bool?> startScan({String? filterString}) {
@@ -40,31 +49,33 @@ abstract class EspBlufiPlatform extends PlatformInterface {
   }
 
   Future<bool> requestCloseConnection() async {
-    throw UnimplementedError('requestCloseConnection() has not been implemented');
+    throw UnimplementedError(
+        'requestCloseConnection() has not been implemented');
+  }
+
+  Future<bool> requestDeviceVersion() async {
+    throw UnimplementedError('requestDeviceVersion() has not been implemented');
+  }
+
+  Future<bool> requestDeviceStatus() async {
+    throw UnimplementedError('requestDeviceStatus() has not been implemented');
   }
 
   Future<bool> requestDeviceWifiScan() async {
-    throw UnimplementedError('requestDeviceWifiScan() has not been implemented');
+    throw UnimplementedError(
+        'requestDeviceWifiScan() has not been implemented');
   }
 
   Future<void> configProvision({String? username, String? password}) async {
     throw UnimplementedError('configProvision() has not been implemented');
   }
 
-  Future<void> getAllPairedDevice() async {
-    throw UnimplementedError('getAllPairedDevice');
-  }
-
-  Future<void> requestDeviceStatus() async {
-    throw UnimplementedError('requestDeviceStatus');
-  }
-
   Future<bool> sendCustomData({String? data}) async {
     throw UnimplementedError('sendCustomData');
   }
 
-  void onMessageReceived(
-      {ResultCallback? successCallback, ResultCallback? errorCallback}) {
-    throw UnimplementedError('onMessageReceived() has not been implemented');
+  Future<bool> negotiateSecurity() async {
+    throw UnimplementedError(
+        'negotiateSecurity() has not been implemented');
   }
 }

@@ -14,6 +14,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import blufi.espressif.BlufiCallback
@@ -25,6 +26,8 @@ import blufi.espressif.response.BlufiStatusResponse
 import blufi.espressif.response.BlufiVersionResponse
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONObject
+
 
 class EspBlufiManager(
     private val activityPluginBinding: ActivityPluginBinding,
@@ -46,6 +49,29 @@ class EspBlufiManager(
 
     fun getPlatformVersion(result: MethodChannel.Result) {
         result.success("Android " + Build.VERSION.RELEASE)
+    }
+
+    fun getAllPairedDevice(result: MethodChannel.Result) {
+        val adapter = bluetoothManager.adapter
+        if (!adapter.isEnabled) {
+            result.error(
+                "-1",
+                "Adapter is not enabled",
+                null,
+            )
+            return
+        }
+
+        val bondedDevices = adapter.bondedDevices
+        result.success(
+            bondedDevices.map { device ->
+                JSONObject().apply {
+                    put("address", device.address)
+                    put("name", device.name)
+                    put("rssi", "")
+                }.toString()
+            }
+        )
     }
 
     fun startScan(
@@ -95,7 +121,7 @@ class EspBlufiManager(
                 blufiFilter = filter,
                 onAddDevice = { scanResult ->
                     deviceMap[scanResult.device.address] = scanResult
-                    postMessage(EspBlufiData.Device(scanResult))
+                    postMessage(EspBlufiData.ScanResult(scanResult))
                 }
             ).also {
                 scanCallback = it
@@ -119,13 +145,15 @@ class EspBlufiManager(
             result.success(false)
         } else {
             scanner.stopScan(scanCallback)
-            deviceMap.clear()
             result.success(true)
         }
     }
 
     fun connect(deviceId: String?, result: MethodChannel.Result) {
+        Log.d("AAA", "connect deviceAddress:$deviceId")
         if (deviceId.isNullOrEmpty() || !deviceMap.containsKey(deviceId)) {
+            Log.d("AAA", "keys -> " + deviceMap.keys.joinToString { it })
+            Log.d("AAA", "not find device ${deviceId.isNullOrEmpty()} ${deviceMap.containsKey(deviceId)}")
             result.success(false)
         } else {
             connectInternal(deviceMap[deviceId]!!.device)
@@ -154,6 +182,24 @@ class EspBlufiManager(
         }
     }
 
+    fun requestDeviceVersion(result: MethodChannel.Result) {
+        blufiClient?.let {
+            it.requestDeviceVersion()
+            result.success(true)
+        } ?: run {
+            result.success(false)
+        }
+    }
+
+    fun requestDeviceStatus(result: MethodChannel.Result) {
+        blufiClient?.let {
+            it.requestDeviceStatus()
+            result.success(true)
+        } ?: run {
+            result.success(false)
+        }
+    }
+
     fun requestDeviceWifiScan(result: MethodChannel.Result) {
         blufiClient?.let {
             it.requestDeviceWifiScan()
@@ -163,7 +209,7 @@ class EspBlufiManager(
         }
     }
 
-    fun configure(
+    fun configProvision(
         username: String?,
         password: String?,
         result: MethodChannel.Result,
@@ -186,16 +232,6 @@ class EspBlufiManager(
         }
     }
 
-    fun getAllPairedDevice() {
-
-    }
-
-    fun requestDeviceStatus() {
-        blufiClient?.let {
-
-        }
-    }
-
     fun sendCustomData(data: String?, result: MethodChannel.Result) {
         if (data.isNullOrEmpty()) {
             result.success(false)
@@ -203,6 +239,15 @@ class EspBlufiManager(
         }
         blufiClient?.let {
             it.postCustomData(data.toByteArray())
+            result.success(true)
+        } ?: run {
+            result.success(false)
+        }
+    }
+
+    fun negotiateSecurity(result: MethodChannel.Result) {
+        blufiClient?.let {
+            it.negotiateSecurity()
             result.success(true)
         } ?: run {
             result.success(false)
@@ -270,13 +315,6 @@ class EspBlufiManager(
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 gatt.disconnect()
-//                updateMessage(
-//                    String.format(
-//                        Locale.ENGLISH,
-//                        "Discover services error status %d",
-//                        status
-//                    ), false
-//                )
             }
         }
 
@@ -304,10 +342,6 @@ class EspBlufiManager(
         ) {
             if (status != BluetoothGatt.GATT_SUCCESS) {
                 gatt.disconnect()
-//                updateMessage(
-//                    String.format(Locale.ENGLISH, "WriteChar error status %d", status),
-//                    false
-//                )
             }
         }
     }
@@ -385,7 +419,7 @@ class EspBlufiManager(
             results: List<BlufiScanResult>,
         ) {
             postMessage(
-                EspBlufiData.BlufiScanResult(
+                EspBlufiData.BlufiScanSSIDsResult(
                     status = status,
                     results = results,
                 )

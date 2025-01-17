@@ -1,12 +1,11 @@
 package yu.legend.esp_blufi
 
-import android.bluetooth.le.ScanResult
 import org.json.JSONArray
 import org.json.JSONObject
 
 sealed interface EspBlufiData {
-    class Device(
-        private val result: ScanResult
+    class ScanResult(
+        private val result: android.bluetooth.le.ScanResult
     ) : EspBlufiData {
         override fun toString(): String {
             return response("ble_scan_result") {
@@ -70,10 +69,10 @@ sealed interface EspBlufiData {
         override fun toString(): String {
             return response("blufi_gatt_prepared") {
                 put("address", address)
-                put("hasService", hasService)
-                put("hasWriteChar", hasWriteChar)
-                put("hasNotifyChar", hasNotifyChar)
-                put("requestMtu", requestMtu)
+                put("has_service", hasService)
+                put("has_write_char", hasWriteChar)
+                put("has_notify_char", hasNotifyChar)
+                put("request_mtu", requestMtu)
                 put("mtu", mtu)
             }
         }
@@ -106,12 +105,12 @@ sealed interface EspBlufiData {
         override fun toString(): String {
             return response("blufi_device_status_response") {
                 put("status", status)
-                put("statusMessage", statusMessage)
+                put("status_message", statusMessage)
             }
         }
     }
 
-    class BlufiScanResult(
+    class BlufiScanSSIDsResult(
         val status: Int,
         val results: List<blufi.espressif.response.BlufiScanResult>,
     ) : EspBlufiData {
@@ -172,7 +171,7 @@ sealed interface EspBlufiData {
     ) : EspBlufiData {
         override fun toString(): String {
             return response("blufi_error") {
-                put("errCode", errCode)
+                put("err_code", errCode)
             }
         }
     }

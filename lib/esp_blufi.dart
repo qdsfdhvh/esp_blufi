@@ -14,6 +14,28 @@ class EspBlufi {
     return EspBlufi.instance.getPlatformVersion();
   }
 
+  void onMessageReceived(
+      {BlufiDataCallback? successCallback, ResultCallback? errorCallback}) {
+    EspBlufi.instance.onMessageReceived(
+        successCallback: (String? data) {
+          if (successCallback != null && data != null) {
+            Map<String, dynamic> mapData = json.decode(data);
+            final blufiData = EspBlufiData.fromJson(mapData);
+            successCallback.call(blufiData);
+          }
+        },
+        errorCallback: errorCallback);
+  }
+
+  Future<List<ScanResult>> getAllPairedDevice() async {
+    final list = await EspBlufi.instance.getAllPairedDevice();
+    return list?.map((e) {
+          Map<String, dynamic> mapData = json.decode(e);
+          return ScanResult.fromJson(mapData);
+        }).toList() ??
+        [];
+  }
+
   Future<bool?> startScan({String? filterString}) {
     return EspBlufi.instance.startScan(filterString: filterString);
   }
@@ -30,6 +52,14 @@ class EspBlufi {
     return EspBlufi.instance.requestCloseConnection();
   }
 
+  Future<bool> requestDeviceVersion() async {
+    return EspBlufi.instance.requestDeviceVersion();
+  }
+
+  Future requestDeviceStatus() async {
+    return EspBlufi.instance.requestDeviceStatus();
+  }
+
   Future<bool> requestDeviceWifiScan() async {
     return EspBlufi.instance.requestDeviceWifiScan();
   }
@@ -39,28 +69,11 @@ class EspBlufi {
         .configProvision(username: username, password: password);
   }
 
-  void onMessageReceived(
-      {BlufiDataCallback? successCallback, ResultCallback? errorCallback}) {
-    EspBlufi.instance.onMessageReceived(
-        successCallback: (String? data) {
-          if (successCallback != null && data != null) {
-            Map<String, dynamic> mapData = json.decode(data);
-            final blufiData = EspBlufiData.fromJson(mapData);
-            successCallback.call(blufiData);
-          }
-        },
-        errorCallback: errorCallback);
-  }
-
-  Future getAllPairedDevice() async {
-    return EspBlufi.instance.getAllPairedDevice();
-  }
-
-  Future requestDeviceStatus() async {
-    return EspBlufi.instance.requestDeviceStatus();
-  }
-
   Future<bool> sendCustomData({String? data}) async {
     return EspBlufi.instance.sendCustomData(data: data);
+  }
+
+  Future<bool> negotiateSecurity() async {
+    return EspBlufi.instance.negotiateSecurity();
   }
 }

@@ -23,8 +23,15 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
 
   MethodChannelEspBlufi._() {
     methodChannel.setMethodCallHandler(null);
-
     _eventChannel.receiveBroadcastStream().listen(speechResultsHandler, onError: speechResultErrorHandler);
+  }
+
+  speechResultsHandler(dynamic event) {
+    if (_resultSuccessCallback != null) _resultSuccessCallback!(event);
+  }
+
+  speechResultErrorHandler(dynamic error) {
+    if (_resultErrorCallback != null) _resultErrorCallback!(error);
   }
 
   @override
@@ -37,6 +44,12 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
+  }
+
+  @override
+  Future<List<String>?> getAllPairedDevice() async {
+    final list = await methodChannel.invokeMethod<List<String>>('getAllPairedDevice');
+    return list;
   }
 
   @override
@@ -61,6 +74,16 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
   }
 
   @override
+  Future<bool> requestDeviceVersion() async {
+    return await methodChannel.invokeMethod('requestDeviceVersion');
+  }
+
+  @override
+  Future<bool> requestDeviceStatus() async {
+    return await methodChannel.invokeMethod('requestDeviceStatus');
+  }
+
+  @override
   Future<bool> requestDeviceWifiScan() async {
     return await methodChannel.invokeMethod('requestDeviceWifiScan');
   }
@@ -71,25 +94,12 @@ class MethodChannelEspBlufi extends EspBlufiPlatform {
   }
 
   @override
-  Future<void> getAllPairedDevice() async {
-    await methodChannel.invokeMethod('getAllPairedDevice');
-  }
-
-  @override
-  Future<void> requestDeviceStatus() async {
-    await methodChannel.invokeMethod('requestDeviceStatus');
-  }
-
-  @override
   Future<bool> sendCustomData({String? data}) async {
     return await methodChannel.invokeMethod('sendCustomData', <String, dynamic>{'data': data});
   }
 
-  speechResultsHandler(dynamic event) {
-    if (_resultSuccessCallback != null) _resultSuccessCallback!(event);
-  }
-
-  speechResultErrorHandler(dynamic error) {
-    if (_resultErrorCallback != null) _resultErrorCallback!(error);
+  @override
+  Future<bool> negotiateSecurity() async {
+    return await methodChannel.invokeMethod('negotiateSecurity');
   }
 }

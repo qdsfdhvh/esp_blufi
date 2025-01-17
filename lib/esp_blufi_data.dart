@@ -22,7 +22,7 @@ sealed class EspBlufiData {
       case 'blufi_device_status_response':
         return BlufiDeviceStatusResponse.fromJson(value);
       case 'blufi_scan_result':
-        return BlufiScanSSIDResults.fromJson(value);
+        return BlufiScanSSIDsResult.fromJson(value);
       case 'blufi_device_version':
         return BlufiDeviceVersion.fromJson(value);
       case 'blufi_post_custom_data_result':
@@ -55,6 +55,11 @@ class ScanResult extends EspBlufiData {
       rssi: json['rssi'],
     );
   }
+
+  @override
+  String toString() {
+    return 'ScanResult{address: $address, name: $name, rssi: $rssi}';
+  }
 }
 
 class ConnectionStateChange extends EspBlufiData {
@@ -75,6 +80,11 @@ class ConnectionStateChange extends EspBlufiData {
       state: json['state'],
     );
   }
+
+  @override
+  String toString() {
+    return 'ConnectionStateChange{address: $address, status: $status, state: $state}';
+  }
 }
 
 class MtuChange extends EspBlufiData {
@@ -88,6 +98,11 @@ class MtuChange extends EspBlufiData {
     return MtuChange(
       mtu: json['mtu'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'MtuChange{mtu: $mtu}';
   }
 }
 
@@ -105,6 +120,11 @@ class SetNotification extends EspBlufiData {
       address: json['address'],
       status: json['status'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'SetNotification{address: $address, status: $status}';
   }
 }
 
@@ -135,6 +155,11 @@ class BlufiGattPrepared extends EspBlufiData {
       mtu: json['mtu'],
     );
   }
+
+  @override
+  String toString() {
+    return 'BlufiGattPrepared{address: $address, hasService: $hasService, hasWriteChar: $hasWriteChar, hasNotifyChar: $hasNotifyChar, requestMtu: $requestMtu, mtu: $mtu}';
+  }
 }
 
 class BlufiNegotiateSecurityResult extends EspBlufiData {
@@ -148,6 +173,11 @@ class BlufiNegotiateSecurityResult extends EspBlufiData {
     return BlufiNegotiateSecurityResult(
       status: json['status'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'BlufiNegotiateSecurityResult{status: $status}';
   }
 }
 
@@ -163,72 +193,86 @@ class BlufiPostConfigureParams extends EspBlufiData {
       status: json['status'],
     );
   }
+
+  @override
+  String toString() {
+    return 'BlufiPostConfigureParams{status: $status}';
+  }
 }
 
 class BlufiDeviceStatusResponse extends EspBlufiData {
   final int status;
-  final int opCode;
-  final int subCode;
-  final int value;
+  final String statusMessage;
 
   BlufiDeviceStatusResponse({
     required this.status,
-    required this.opCode,
-    required this.subCode,
-    required this.value,
+    required this.statusMessage,
   });
 
   factory BlufiDeviceStatusResponse.fromJson(Map<String, dynamic> json) {
     return BlufiDeviceStatusResponse(
       status: json['status'],
-      opCode: json['op_code'],
-      subCode: json['sub_code'],
-      value: json['value'],
+      statusMessage: json['status_message'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'BlufiDeviceStatusResponse{status: $status, statusMessage: $statusMessage}';
   }
 }
 
-class BlufiScanSSIDResults extends EspBlufiData {
+class BlufiScanSSIDsResult extends EspBlufiData {
   final int status;
   final List<BlufiScanSSIDResult> results;
 
-  BlufiScanSSIDResults({
+  BlufiScanSSIDsResult({
     required this.status,
     required this.results,
   });
 
-  factory BlufiScanSSIDResults.fromJson(Map<String, dynamic> json) {
-    return BlufiScanSSIDResults(
+  factory BlufiScanSSIDsResult.fromJson(Map<String, dynamic> json) {
+    return BlufiScanSSIDsResult(
       status: json['status'],
       results: (json['results'] as List).map((e) => BlufiScanSSIDResult.fromJson(e)).toList(),
     );
   }
+
+  @override
+  String toString() {
+    return 'BlufiScanSSIDResults{status: $status, results: $results}';
+  }
 }
 
 class BlufiScanSSIDResult {
-  final String address;
-  final String name;
+  final String ssid;
+  final int type;
   final int rssi;
 
   BlufiScanSSIDResult({
-    required this.address,
-    required this.name,
+    required this.ssid,
+    required this.type,
     required this.rssi,
   });
 
   factory BlufiScanSSIDResult.fromJson(Map<String, dynamic> json) {
     return BlufiScanSSIDResult(
-      address: json['address'],
-      name: json['name'],
+      ssid: json['ssid'],
+      type: json['type'],
       rssi: json['rssi'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'BlufiScanSSIDResult{ssid: $ssid, type: $type, rssi: $rssi}';
   }
 }
 
 
 class BlufiDeviceVersion extends EspBlufiData {
   final int status;
-  final int version;
+  final String version;
 
   BlufiDeviceVersion({
     required this.status,
@@ -240,6 +284,11 @@ class BlufiDeviceVersion extends EspBlufiData {
       status: json['status'],
       version: json['version'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'BlufiDeviceVersion{status: $status, version: $version}';
   }
 }
 
@@ -258,6 +307,11 @@ class BlufiPostCustomDataResult extends EspBlufiData {
       status: json['status'],
     );
   }
+
+  @override
+  String toString() {
+    return 'BlufiPostCustomDataResult{data: $data, status: $status}';
+  }
 }
 
 class BlufiReceiveCustomData extends EspBlufiData {
@@ -275,6 +329,11 @@ class BlufiReceiveCustomData extends EspBlufiData {
       data: json['data'],
     );
   }
+
+  @override
+  String toString() {
+    return 'BlufiReceiveCustomData{status: $status, data: $data}';
+  }
 }
 
 class BlufiError extends EspBlufiData {
@@ -288,5 +347,10 @@ class BlufiError extends EspBlufiData {
     return BlufiError(
       errorCode: json['error_code'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'BlufiError{errorCode: $errorCode}';
   }
 }
