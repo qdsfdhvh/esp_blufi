@@ -23,9 +23,22 @@ class _DeviceListPageState extends State<DeviceListPage> {
   @override
   void initState() {
     super.initState();
-    _espBlufiPlugin.onMessageReceived(
-      successCallback: (data) {
-        switch (data) {
+    _espBlufiPlugin.addMessageReceived(
+      callback: _onMessageReceived,
+    );
+    _startScan();
+  }
+
+  @override
+  void dispose() {
+    _espBlufiPlugin.removeMessageReceived(
+      callback: _onMessageReceived,
+    );
+    super.dispose();
+  }
+
+  void _onMessageReceived(EspBlufiData data) {
+    switch (data) {
           case ScanResult():
             if (_scanResults.containsKey(data.address)) {
               final oldData = _scanResults[data.address]!;
@@ -39,12 +52,9 @@ class _DeviceListPageState extends State<DeviceListPage> {
             }
             break;
           default:
-            debugPrint('data: $data');
+            // do nothing
+            break;
         }
-      },
-      errorCallback: (error) {},
-    );
-    _startScan();
   }
 
   @override
@@ -65,14 +75,21 @@ class _DeviceListPageState extends State<DeviceListPage> {
                   title: Text(data.name),
                   subtitle: Text(data.address),
                   trailing: Text('${data.rssi}'),
-                  onTap: () {
-                    _stopScan();
-                    Navigator.push(context, CupertinoPageRoute(builder: (_) {
+                  onTap: () async {
+                    var waitToRefreshScan = false;
+                    if (_isScanning) {
+                      _stopScan();
+                      waitToRefreshScan = true;
+                    }
+                    await Navigator.push(context, CupertinoPageRoute(builder: (_) {
                       return DeviceDetailPage(
                         deviceAddress: data.address,
                         deviceName: data.name,
                       );
                     }));
+                    if (waitToRefreshScan) {
+                      _startScan();
+                    }
                   },
                 );
               },
@@ -93,6 +110,7 @@ class _DeviceListPageState extends State<DeviceListPage> {
     final success = await _espBlufiPlugin.startScan(filterString: 'BLUFI');
     if (success ?? false) {
       setState(() {
+        _scanResults.clear();
         _isScanning = true;
       });
     }
@@ -102,7 +120,6 @@ class _DeviceListPageState extends State<DeviceListPage> {
     final success = await _espBlufiPlugin.stopScan();
     if (success) {
       setState(() {
-        _scanResults.clear();
         _isScanning = false;
       });
     }

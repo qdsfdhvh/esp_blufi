@@ -1,3 +1,4 @@
+import 'package:esp_blufi/esp_blufi_data.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'esp_blufi_method_channel.dart';
@@ -23,16 +24,28 @@ abstract class EspBlufiPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  void onMessageReceived(
-      {ResultCallback? successCallback, ResultCallback? errorCallback}) {
-    throw UnimplementedError('onMessageReceived() has not been implemented');
+  void addMessageReceived({BlufiDataCallback? callback}) {
+    throw UnimplementedError('addMessageReceived() has not been implemented');
+  }
+
+  void removeMessageReceived({BlufiDataCallback? callback}) {
+    throw UnimplementedError(
+        'removeMessageReceived() has not been implemented');
+  }
+
+  void addErrorReceived({ResultCallback? callback}) {
+    throw UnimplementedError('addErrorReceived() has not been implemented');
+  }
+
+  void removeErrorReceived({ResultCallback? callback}) {
+    throw UnimplementedError('removeErrorReceived() has not been implemented');
   }
 
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<List<String>?> getAllPairedDevice() async {
+  Future<List<ScanResult>> getAllPairedDevice() async {
     throw UnimplementedError('getAllPairedDevice');
   }
 
@@ -75,7 +88,6 @@ abstract class EspBlufiPlatform extends PlatformInterface {
   }
 
   Future<bool> negotiateSecurity() async {
-    throw UnimplementedError(
-        'negotiateSecurity() has not been implemented');
+    throw UnimplementedError('negotiateSecurity() has not been implemented');
   }
 }

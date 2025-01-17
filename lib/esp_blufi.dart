@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:esp_blufi/esp_blufi_data.dart';
 import 'package:esp_blufi/esp_blufi_method_channel.dart';
 
@@ -14,26 +12,24 @@ class EspBlufi {
     return EspBlufi.instance.getPlatformVersion();
   }
 
-  void onMessageReceived(
-      {BlufiDataCallback? successCallback, ResultCallback? errorCallback}) {
-    EspBlufi.instance.onMessageReceived(
-        successCallback: (String? data) {
-          if (successCallback != null && data != null) {
-            Map<String, dynamic> mapData = json.decode(data);
-            final blufiData = EspBlufiData.fromJson(mapData);
-            successCallback.call(blufiData);
-          }
-        },
-        errorCallback: errorCallback);
+  void addMessageReceived({ required BlufiDataCallback callback }) {
+    EspBlufi.instance.addMessageReceived(callback: callback);
+  }
+
+  void removeMessageReceived({ required BlufiDataCallback callback }) {
+    EspBlufi.instance.removeMessageReceived(callback: callback);
+  }
+
+  void addErrorReceived({ required ResultCallback callback }) {
+    EspBlufi.instance.addErrorReceived(callback: callback);
+  }
+
+  void removeErrorReceived({ required ResultCallback callback }) {
+    EspBlufi.instance.removeErrorReceived(callback: callback);
   }
 
   Future<List<ScanResult>> getAllPairedDevice() async {
-    final list = await EspBlufi.instance.getAllPairedDevice();
-    return list?.map((e) {
-          Map<String, dynamic> mapData = json.decode(e);
-          return ScanResult.fromJson(mapData);
-        }).toList() ??
-        [];
+    return await EspBlufi.instance.getAllPairedDevice();
   }
 
   Future<bool?> startScan({String? filterString}) {

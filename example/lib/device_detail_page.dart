@@ -27,11 +27,20 @@ class _DeviceListPageState extends State<DeviceDetailPage> {
   @override
   void initState() {
     super.initState();
-
-    _espBlufiPlugin.onMessageReceived(
-      successCallback: _onMessageReceived,
-      errorCallback: (error) {},
+    _espBlufiPlugin.addMessageReceived(
+      callback: _onMessageReceived,
     );
+  }
+
+  @override
+  void dispose() {
+    _espBlufiPlugin.removeMessageReceived(
+      callback: _onMessageReceived,
+    );
+    if (_isConnected) {
+      _espBlufiPlugin.requestCloseConnection();
+    }
+    super.dispose();
   }
 
   void _onMessageReceived(EspBlufiData data) {
